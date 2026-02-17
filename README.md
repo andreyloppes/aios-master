@@ -144,3 +144,23 @@ Este diretorio e a **fonte de verdade** de todo o sistema. O Claude Code acessa 
 ```
 
 Para recriar os symlinks (ex: apos mover a pasta), rode `./setup.sh`.
+
+## Open-Core + Pro MVP
+
+Para referencia de produto/licenciamento, existe um MVP executavel em:
+
+`open-core-pro-mvp/`
+
+Ele demonstra:
+
+1. `core/` aberto sempre ativo.
+2. `pro/` habilitado por `PRO_LICENSE_KEY`.
+3. Feature flags com fallback seguro para core quando a licenca nao e valida.
+
+Guia rapido:
+
+```bash
+cd open-core-pro-mvp
+node cli.js status
+node scripts/generate-demo-license.js advanced 2099-12-31 acme
+```
