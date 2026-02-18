@@ -108,7 +108,93 @@ Based on Synkra AIOS architecture, adapted for native Claude Code operation.
   - Uso alternativo via npx: `npx -y figma-developer-mcp --figma-api-key=KEY --stdio`
   - Simplifica dados do Figma para AI gerar código mais preciso
 
+## PRO Module (Built 2026-02-17)
+- Path: `~/claude-master/pro/` — 129 files, open-core premium layer
+- Install: `./pro/setup.sh` (creates symlinks for PRO commands/workflows/skills)
+- Data dir: `~/.claude-master-pro/data/` (sessions.jsonl, costs, backups)
+
+### PRO Commands (5)
+| Command | Purpose |
+|---------|---------|
+| `/pro:status` | System health and component status |
+| `/pro:metrics` | Session analytics and performance metrics |
+| `/pro:squad` | Activate industry squad overlay |
+| `/pro:cost` | Token cost tracking and optimization |
+| `/pro:report` | Generate professional reports (5 types) |
+
+### PRO Workflows (4)
+| Command | Purpose |
+|---------|---------|
+| `/workflows:client-onboarding` | 5-phase client pipeline |
+| `/workflows:sprint-retro` | Automated retrospective from git/session data |
+| `/workflows:cost-report` | Weekly cost analysis |
+| `/workflows:deploy-pipeline` | 5-phase CI/CD (validate→quality→staging→prod→verify) |
+
+### PRO Skills (3)
+| Skill | Purpose |
+|-------|---------|
+| `cost-optimizer` | Token tracking, model routing, cache optimization |
+| `analytics` | Velocity, quality, efficiency metrics |
+| `client-report` | Professional report generation |
+
+### Industry Squads (5)
+| Squad | Agents | Domain |
+|-------|--------|--------|
+| `healthcare` | Clinix, Vera, Medis, Nexus | HIPAA/LGPD, HL7/FHIR, EHR |
+| `marketing-agency` | Pixel, Dash, Campfire, Prism | Social APIs, A/B, UTM |
+| `saas-startup` | Scaler, Pulse, Tenon, Funnel | Stripe, multi-tenant, PLG |
+| `ecommerce` | Shelf, Catalog, Convert, Gate | PCI-DSS, checkout, inventory |
+| `freelancer` | Solo, Brief, Scope, Ledger | Proposals, invoicing, tax |
+
+### MCP Connectors (5)
+google-sheets, notion, slack-discord, stripe, database — configs + setup + docs
+
+### Production Scripts (8)
+session-logger, cost-tracker, health-check, backup, cron-scheduler, webhook-receiver + 3 libs
+
+### Dashboard
+- Path: `~/claude-master/pro/dashboard/`
+- Stack: Next.js 15 + shadcn/ui v4 + Tailwind v4 + Recharts
+- Pages: Overview, Agents, Costs, Sessions
+
+### Open-Core Licensing
+- Path: `~/claude-master/open-core-pro-mvp/`
+- Model: Core (MIT, free) + PRO (premium, licensed)
+- Features: HMAC-SHA256 signed license keys, feature gates, tier system
+
 ## User Preferences
 - Language: Portuguese (pt-BR) for communication
 - Approach: Practical, hands-on, wants things working
 - Interest: Automation, multi-agent systems, full-stack development
+
+## PRO Monetization + Deploy Status (2026-02-17)
+- Public pricing + checkout flow implemented in dashboard (`pro/dashboard/src/app/pricing`)
+- License backend with public checkout + auto renewal/revocation via Stripe webhooks implemented in `pro/license-service`
+- Stripe account status endpoint implemented: `GET /api/v1/admin/stripe/account`
+- Admin dashboard now shows connected Stripe account/mode/webhook status
+
+### Deploy done now
+- Dashboard deployed to Vercel (account: `andreyloppes`)
+- Production URL (project internal): `https://dashboard-nufzuw6sv-andreyloppes-projects.vercel.app`
+- Public alias URL (working 200): `https://dashboard-five-kappa-84.vercel.app`
+
+### Pending for next session
+- Deploy `pro/license-service` to Hetzner/Railway/Render (user preferred Hetzner later)
+- Configure real Stripe keys (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`)
+- Point dashboard envs to license service (`LICENSE_SERVICE_URL`, `LICENSE_SERVICE_TOKEN`)
+- Configure Stripe webhook endpoint in production
+
+### Resale visibility mode
+- Dashboard now supports visibility mode via env:
+  - `NEXT_PUBLIC_DASHBOARD_MODE=owner` (Pricing + Admin visible)
+  - `NEXT_PUBLIC_DASHBOARD_MODE=customer` (only Overview/Agents/Costs/Sessions)
+- In `customer` mode, direct access to `/admin/*` and `/pricing` is blocked (404)
+- Verified locally on 2026-02-17: `/` -> 200, `/admin` -> 404, `/pricing` -> 404 in `customer` mode
+
+### Terminal Delivery (Version B) - 2026-02-18
+- Added guided installer: `pro/install.sh`
+- Installer supports `customer` vs `owner` profile, optional dashboard env generation, and dry-run mode
+- Supports non-interactive resale flow:
+  - `./install.sh --non-interactive --mode customer --license-key ... --license-service-url ...`
+- `pro/setup.sh` now accepts license env checks:
+  - `PRO_LICENSE_KEY`, `PRO_LICENSE_SERVICE_URL`, `SKIP_LICENSE_CHECK`
