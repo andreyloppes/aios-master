@@ -145,6 +145,15 @@ Este diretorio e a **fonte de verdade** de todo o sistema. O Claude Code acessa 
 
 Para recriar os symlinks (ex: apos mover a pasta), rode `./setup.sh`.
 
+## Bootstrap (1 comando)
+
+Para onboarding de cliente final (Core + PRO em um fluxo):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/andreyloppes/aios-master/main/bootstrap.sh | \
+  bash -s -- --license-key "AIOSPRO...." --mode customer
+```
+
 ## Open-Core + Pro MVP
 
 Para referencia de produto/licenciamento, existe um MVP executavel em:
