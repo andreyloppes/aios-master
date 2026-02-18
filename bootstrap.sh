@@ -9,6 +9,7 @@ set -euo pipefail
 REPO_URL="${REPO_URL:-https://github.com/andreyloppes/aios-master.git}"
 BRANCH="${BRANCH:-main}"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/claude-master}"
+EDITION="${EDITION:-auto}"
 MODE="${MODE:-customer}"
 LICENSE_KEY="${LICENSE_KEY:-}"
 LICENSE_SERVICE_URL="${LICENSE_SERVICE_URL:-}"
@@ -48,10 +49,13 @@ usage() {
 Claude Master Bootstrap
 
 Usage:
-  ./bootstrap.sh --license-key "AIOSPRO...."
-  ./bootstrap.sh --license-key "AIOSPRO...." --mode owner
+  ./bootstrap.sh --edition core
+  ./bootstrap.sh --edition pro --license-key "AIOSPRO...."
 
 Options:
+  --edition <auto|core|pro>        Install target (default: auto)
+  --core-only                      Shortcut for --edition core
+  --pro                            Shortcut for --edition pro
   --license-key <key>              PRO license key
   --license-service-url <url>      URL for remote license validation
   --mode <customer|owner>          Install profile (default: customer)
@@ -71,6 +75,23 @@ EOF
 parse_args() {
   while [[ $# -gt 0 ]]; do
     case "$1" in
+      --edition)
+        [[ $# -ge 2 ]] || die "Missing value for --edition"
+        EDITION="$2"
+        shift 2
+        ;;
+      --edition=*)
+        EDITION="${1#*=}"
+        shift
+        ;;
+      --core-only)
+        EDITION="core"
+        shift
+        ;;
+      --pro)
+        EDITION="pro"
+        shift
+        ;;
       --license-key)
         [[ $# -ge 2 ]] || die "Missing value for --license-key"
         LICENSE_KEY="$2"
@@ -184,6 +205,27 @@ validate_mode() {
   esac
 }
 
+normalize_edition() {
+  case "${EDITION}" in
+    auto|"")
+      if [[ -n "${LICENSE_KEY}" ]]; then
+        EDITION="pro"
+      else
+        EDITION="core"
+      fi
+      ;;
+    core|free|gratuito)
+      EDITION="core"
+      ;;
+    pro|premium)
+      EDITION="pro"
+      ;;
+    *)
+      die "Invalid edition: ${EDITION} (expected auto|core|pro)"
+      ;;
+  esac
+}
+
 sync_repo() {
   if [[ ! -e "$INSTALL_DIR" ]]; then
     log_info "Cloning ${REPO_URL} (${BRANCH}) into ${INSTALL_DIR}"
@@ -246,27 +288,55 @@ run_pro_installer() {
   bash "$installer" "${args[@]}"
 }
 
+run_core_installer() {
+  local installer="${INSTALL_DIR}/setup.sh"
+  [[ -f "$installer" ]] || die "Core installer not found: ${installer}"
+
+  log_info "Running Core installer"
+  if [[ "$DRY_RUN" == "true" ]]; then
+    log_info "[dry-run] bash ${installer}"
+    return 0
+  fi
+
+  bash "$installer"
+}
+
 main() {
   parse_args "$@"
   check_prerequisites
   validate_mode
+  normalize_edition
+
+  if [[ "$EDITION" == "pro" && "$NON_INTERACTIVE" == "true" && -z "$LICENSE_KEY" ]]; then
+    die "For PRO in non-interactive mode, pass --license-key \"AIOSPRO...\""
+  fi
 
   echo ""
   echo -e "${BOLD}${BLUE}Claude Master Bootstrap${NC}"
   echo "repo:        ${REPO_URL}"
   echo "branch:      ${BRANCH}"
   echo "install dir: ${INSTALL_DIR}"
+  echo "edition:     ${EDITION}"
   echo "mode:        ${MODE}"
   echo ""
 
   sync_repo
-  run_pro_installer
+  if [[ "$EDITION" == "core" ]]; then
+    run_core_installer
+  else
+    run_pro_installer
+  fi
 
   echo ""
   echo -e "${BOLD}${GREEN}Bootstrap concluido.${NC}"
   echo "Teste no Claude Code:"
-  echo "  /pro:status"
-  echo "  /pro:squad healthcare"
+  if [[ "$EDITION" == "core" ]]; then
+    echo "  /agents:master status rapido do sistema"
+    echo "  /workflows:team-status"
+  else
+    echo "  /pro:status"
+    echo "  /pro:squad healthcare"
+  fi
   echo ""
 }
 

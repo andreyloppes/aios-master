@@ -154,6 +154,13 @@ curl -fsSL https://raw.githubusercontent.com/andreyloppes/aios-master/main/boots
   bash -s -- --license-key "AIOSPRO...." --mode customer
 ```
 
+Instalar somente a versao gratuita (Core):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/andreyloppes/aios-master/main/bootstrap.sh | \
+  bash -s -- --edition core
+```
+
 ## Open-Core + Pro MVP
 
 Para referencia de produto/licenciamento, existe um MVP executavel em:
