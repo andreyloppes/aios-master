@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Claude Master bootstrap (one-command onboarding)
-# Example:
-# curl -fsSL https://raw.githubusercontent.com/andreyloppes/aios-master/main/bootstrap.sh | \
-#   bash -s -- --license-key "AIOSPRO...." --mode customer
+# AIOS Master bootstrap (one-command install)
+# Usage:
+#   curl -fsSL https://raw.githubusercontent.com/andreyloppes/aios-master/main/bootstrap.sh | bash
+#   curl -fsSL ... | bash -s -- --edition pro --license-key "AIOSPRO...."
 
 set -euo pipefail
 
@@ -21,11 +21,13 @@ SKIP_LICENSE_VALIDATION=false
 NO_UPDATE=false
 DRY_RUN=false
 
-RED='\033[0;31m'
-GREEN='\033[0;32m'
+RED='\033[1;31m'
+GREEN='\033[1;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 BOLD='\033[1m'
+DIM='\033[2m'
 NC='\033[0m'
 
 log_info() {
@@ -45,9 +47,32 @@ die() {
   exit 1
 }
 
+show_banner() {
+    echo ""
+    echo -e "${RED}"
+    cat << 'BANNER'
+     █████╗ ██╗ ██████╗ ███████╗
+    ██╔══██╗██║██╔═══██╗██╔════╝
+    ███████║██║██║   ██║███████╗
+    ██╔══██║██║██║   ██║╚════██║
+    ██║  ██║██║╚██████╔╝███████║
+    ╚═╝  ╚═╝╚═╝ ╚═════╝ ╚══════╝
+    ███╗   ███╗ █████╗ ███████╗████████╗███████╗██████╗
+    ████╗ ████║██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
+    ██╔████╔██║███████║███████╗   ██║   █████╗  ██████╔╝
+    ██║╚██╔╝██║██╔══██║╚════██║   ██║   ██╔══╝  ██╔══██╗
+    ██║ ╚═╝ ██║██║  ██║███████║   ██║   ███████╗██║  ██║
+    ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
+BANNER
+    echo -e "${NC}"
+    echo -e "    ${DIM}Multi-Agent System for Claude Code${NC}"
+    echo -e "    ${DIM}v1.0.0 — github.com/andreyloppes/aios-master${NC}"
+    echo ""
+}
+
 usage() {
   cat <<'EOF'
-Claude Master Bootstrap
+AIOS Master Bootstrap
 
 Usage:
   ./bootstrap.sh --edition core
@@ -368,37 +393,26 @@ main() {
     die "For PRO in non-interactive mode, pass --license-key \"AIOSPRO...\""
   fi
 
-  echo ""
-  echo -e "${BOLD}${BLUE}Claude Master Bootstrap${NC}"
-  echo "repo:        ${REPO_URL}"
+  show_banner
+
+  echo -e "  ${DIM}Edition:  ${EDITION}${NC}"
+  echo -e "  ${DIM}Branch:   ${BRANCH}${NC}"
+  echo -e "  ${DIM}Target:   ${INSTALL_DIR}${NC}"
   if [[ "$EDITION" == "pro" ]]; then
-    echo "pro repo:    ${PRO_REPO_URL}"
+    echo -e "  ${DIM}PRO repo: ${PRO_REPO_URL}${NC}"
   fi
-  echo "branch:      ${BRANCH}"
-  echo "install dir: ${INSTALL_DIR}"
-  echo "edition:     ${EDITION}"
-  echo "mode:        ${MODE}"
   echo ""
 
+  log_info "Downloading AIOS Master..."
   sync_repo
+
   if [[ "$EDITION" == "core" ]]; then
     run_core_installer
   else
+    log_info "Downloading PRO module..."
     sync_pro_repo
     run_pro_installer
   fi
-
-  echo ""
-  echo -e "${BOLD}${GREEN}Bootstrap concluido.${NC}"
-  echo "Teste no Claude Code:"
-  if [[ "$EDITION" == "core" ]]; then
-    echo "  /agents:master status rapido do sistema"
-    echo "  /workflows:team-status"
-  else
-    echo "  /pro:status"
-    echo "  /pro:squad healthcare"
-  fi
-  echo ""
 }
 
 main "$@"
