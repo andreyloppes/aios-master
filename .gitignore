@@ -7,12 +7,20 @@ config/
 # Open-core MVP reference (not needed in public)
 open-core-pro-mvp/
 
+# Local references (cloned repos for design system study)
+references/
+
+# Local docs (personal setup notes)
+docs/
+
 # PRO commands and workflows (delivered via private repo)
 commands/pro/
 commands/workflows/client-onboarding.md
 commands/workflows/cost-report.md
 commands/workflows/deploy-pipeline.md
 commands/workflows/sprint-retro.md
+commands/workflows/parallel-build.md
+commands/workflows/parallel-review.md
 
 # PRO skills symlinks
 skills/analytics

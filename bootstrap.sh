@@ -9,7 +9,7 @@ set -euo pipefail
 REPO_URL="${REPO_URL:-https://github.com/andreyloppes/aios-master.git}"
 PRO_REPO_URL="${PRO_REPO_URL:-https://github.com/andreyloppes/aios-master-pro.git}"
 BRANCH="${BRANCH:-main}"
-INSTALL_DIR="${INSTALL_DIR:-$HOME/claude-master}"
+INSTALL_DIR="${INSTALL_DIR:-$HOME/AIOS-MASTER}"
 EDITION="${EDITION:-auto}"
 MODE="${MODE:-customer}"
 LICENSE_KEY="${LICENSE_KEY:-}"
@@ -85,7 +85,7 @@ Options:
   --license-key <key>              PRO license key
   --license-service-url <url>      URL for remote license validation
   --mode <customer|owner>          Install profile (default: customer)
-  --install-dir <path>             Clone/update target (default: ~/claude-master)
+  --install-dir <path>             Clone/update target (default: ~/AIOS-MASTER)
   --repo-url <url>                 Git repository URL (Core)
   --pro-repo-url <url>             Git repository URL (PRO private repo)
   --branch <name>                  Git branch (default: main)

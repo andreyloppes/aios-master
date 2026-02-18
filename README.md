@@ -38,8 +38,8 @@ curl -fsSL https://raw.githubusercontent.com/andreyloppes/aios-master/main/boots
 Or install manually:
 
 ```bash
-git clone https://github.com/andreyloppes/aios-master.git ~/claude-master
-cd ~/claude-master && ./setup.sh
+git clone https://github.com/andreyloppes/aios-master.git ~/AIOS-MASTER
+cd ~/AIOS-MASTER && ./setup.sh
 ```
 
 Then open **Claude Code** and use:
@@ -112,8 +112,8 @@ Each agent has a persistent identity, defined expertise, and strict authority ru
 AIOS Master installs via symlinks into Claude Code's configuration directory:
 
 ```
-~/.claude/commands  →  ~/claude-master/commands
-~/.claude/skills    →  ~/claude-master/skills
+~/.claude/commands  →  ~/AIOS-MASTER/commands
+~/.claude/skills    →  ~/AIOS-MASTER/skills
 ```
 
 When you type `/agents:dev` in Claude Code, it loads the agent definition from the symlinked file. The agent's personality, expertise, rules, and memory are all defined in markdown — no external services, no API keys, no runtime dependencies.
@@ -141,7 +141,7 @@ Works with Claude Code's native Agent Teams feature (`CLAUDE_CODE_EXPERIMENTAL_A
 ## Project Structure
 
 ```
-claude-master/
+AIOS-MASTER/
 ├── commands/
 │   ├── agents/        # 12 agent definitions (.md)
 │   ├── workflows/     # 8 workflow definitions (.md)
@@ -172,7 +172,7 @@ claude-master/
 Pull the latest version:
 
 ```bash
-cd ~/claude-master && git pull
+cd ~/AIOS-MASTER && git pull
 ```
 
 Symlinks stay intact — the new files are immediately available in Claude Code.
@@ -183,7 +183,7 @@ Symlinks stay intact — the new files are immediately available in Claude Code.
 
 ```bash
 rm ~/.claude/commands ~/.claude/skills
-rm -rf ~/claude-master
+rm -rf ~/AIOS-MASTER
 ```
 
 ---
