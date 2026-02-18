@@ -7,6 +7,7 @@
 set -euo pipefail
 
 REPO_URL="${REPO_URL:-https://github.com/andreyloppes/aios-master.git}"
+PRO_REPO_URL="${PRO_REPO_URL:-https://github.com/andreyloppes/aios-master-pro.git}"
 BRANCH="${BRANCH:-main}"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/claude-master}"
 EDITION="${EDITION:-auto}"
@@ -60,7 +61,8 @@ Options:
   --license-service-url <url>      URL for remote license validation
   --mode <customer|owner>          Install profile (default: customer)
   --install-dir <path>             Clone/update target (default: ~/claude-master)
-  --repo-url <url>                 Git repository URL
+  --repo-url <url>                 Git repository URL (Core)
+  --pro-repo-url <url>             Git repository URL (PRO private repo)
   --branch <name>                  Git branch (default: main)
   --install-core <auto|yes|no>     Core setup mode (default: auto)
   --dashboard <yes|no>             Generate dashboard env file (default: yes)
@@ -135,6 +137,15 @@ parse_args() {
         ;;
       --repo-url=*)
         REPO_URL="${1#*=}"
+        shift
+        ;;
+      --pro-repo-url)
+        [[ $# -ge 2 ]] || die "Missing value for --pro-repo-url"
+        PRO_REPO_URL="$2"
+        shift 2
+        ;;
+      --pro-repo-url=*)
+        PRO_REPO_URL="${1#*=}"
         shift
         ;;
       --branch)
@@ -255,6 +266,52 @@ sync_repo() {
   git -C "$INSTALL_DIR" pull --ff-only origin "$BRANCH"
 }
 
+sync_pro_repo() {
+    local pro_dir="${INSTALL_DIR}/pro"
+
+    if [[ ! -e "$pro_dir" ]]; then
+        log_info "Cloning PRO module from ${PRO_REPO_URL}"
+
+        if ! git clone --branch "$BRANCH" --depth 1 "$PRO_REPO_URL" "$pro_dir" 2>/dev/null; then
+            echo ""
+            log_error "Failed to clone PRO repository."
+            echo ""
+            echo "Possible causes:"
+            echo "  1. You don't have access to the private PRO repo"
+            echo "  2. Git credentials are not configured for this repo"
+            echo ""
+            echo "To configure access:"
+            echo "  gh auth login"
+            echo "  OR set a personal access token:"
+            echo "  git config --global credential.helper store"
+            echo ""
+            echo "To purchase PRO access: [contact info placeholder]"
+            exit 1
+        fi
+        return 0
+    fi
+
+    # If already exists, update
+    if [[ "$NO_UPDATE" == "true" ]]; then
+        log_info "Skipping PRO update (--no-update)"
+        return 0
+    fi
+
+    # Check if it's a git repo (might have been manually placed)
+    if [[ -d "${pro_dir}/.git" ]]; then
+        local dirty
+        dirty="$(git -C "$pro_dir" status --porcelain 2>/dev/null)"
+        if [[ -n "$dirty" ]]; then
+            log_warn "PRO repo has local changes; skipping pull"
+            return 0
+        fi
+        log_info "Updating PRO module"
+        git -C "$pro_dir" pull --ff-only origin "$BRANCH" 2>/dev/null || log_warn "PRO update failed; using existing version"
+    else
+        log_info "PRO directory exists (not a git repo); using as-is"
+    fi
+}
+
 run_pro_installer() {
   local installer="${INSTALL_DIR}/pro/install.sh"
   [[ -f "$installer" ]] || die "Installer not found: ${installer}"
@@ -314,6 +371,9 @@ main() {
   echo ""
   echo -e "${BOLD}${BLUE}Claude Master Bootstrap${NC}"
   echo "repo:        ${REPO_URL}"
+  if [[ "$EDITION" == "pro" ]]; then
+    echo "pro repo:    ${PRO_REPO_URL}"
+  fi
   echo "branch:      ${BRANCH}"
   echo "install dir: ${INSTALL_DIR}"
   echo "edition:     ${EDITION}"
@@ -324,6 +384,7 @@ main() {
   if [[ "$EDITION" == "core" ]]; then
     run_core_installer
   else
+    sync_pro_repo
     run_pro_installer
   fi
 

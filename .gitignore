@@ -1,0 +1,43 @@
+# PRO module (private repo)
+pro/
+
+# Personal configuration (user-specific)
+config/
+
+# Open-core MVP reference (not needed in public)
+open-core-pro-mvp/
+
+# PRO commands and workflows (delivered via private repo)
+commands/pro/
+commands/workflows/client-onboarding.md
+commands/workflows/cost-report.md
+commands/workflows/deploy-pipeline.md
+commands/workflows/sprint-retro.md
+
+# PRO skills symlinks
+skills/analytics
+skills/client-report
+skills/cost-optimizer
+
+# Node.js
+node_modules/
+.next/
+package-lock.json
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backups
+*.bak
+*.backup
+
+# Claude session data
+.claude-master-pro/

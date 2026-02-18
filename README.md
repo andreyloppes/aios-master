@@ -1,5 +1,7 @@
 # Claude Master
 
+> A complete multi-agent system for Claude Code CLI.
+
 Sistema multi-agente completo para Claude Code, construido em Fevereiro de 2026.
 
 Baseado na arquitetura [Synkra AIOS](https://github.com/SynkraAI/aios-core), adaptado para operacao nativa no Claude Code CLI.
@@ -8,7 +10,7 @@ Baseado na arquitetura [Synkra AIOS](https://github.com/SynkraAI/aios-core), ada
 
 ```
 claude-master/
-├── commands/                    # Slash commands (symlink → ~/.claude/commands/)
+├── commands/                    # Slash commands (symlink -> ~/.claude/commands/)
 │   ├── agents/                  # 12 agentes especializados
 │   │   ├── dev.md               # Dex - Full Stack Developer
 │   │   ├── qa.md                # Quinn - Quality & Review
@@ -23,11 +25,11 @@ claude-master/
 │   │   ├── master.md            # Orion - Orchestrator
 │   │   └── squad.md             # Craft - Squad Creator
 │   ├── workflows/               # 8 workflows automatizados
-│   │   ├── greenfield.md        # Projeto do zero (conceito → codigo)
+│   │   ├── greenfield.md        # Projeto do zero (conceito -> codigo)
 │   │   ├── brownfield.md        # Melhorar projeto existente
-│   │   ├── story-cycle.md       # SM → Dev → QA → DevOps loop
+│   │   ├── story-cycle.md       # SM -> Dev -> QA -> DevOps loop
 │   │   ├── qa-loop.md           # Review automatico ate PASS (max 5x)
-│   │   ├── spec-pipeline.md     # Gather → Assess → Research → Write → Critique → Plan
+│   │   ├── spec-pipeline.md     # Gather -> Assess -> Research -> Write -> Critique -> Plan
 │   │   ├── progress.md          # Continuidade entre sessoes
 │   │   ├── auto.md              # Desenvolvimento autonomo
 │   │   └── team-status.md       # Status do projeto e agentes
@@ -39,7 +41,7 @@ claude-master/
 │   ├── extract.md               # Extrair padroes de codigo existente
 │   ├── init.md                  # Inicializar UI com consistencia
 │   └── status.md                # Estado atual do design system
-├── skills/                      # Skills (symlink → ~/.claude/skills/)
+├── skills/                      # Skills (symlink -> ~/.claude/skills/)
 │   └── interface-design/        # Design de interfaces (dashboards, apps, tools)
 │       ├── SKILL.md
 │       └── references/
@@ -47,14 +49,11 @@ claude-master/
 │           ├── example.md
 │           ├── principles.md
 │           └── validation.md
-├── memory/                      # Memoria persistente (symlink → ~/.claude/projects/.../memory/)
+├── memory/                      # Memoria persistente do sistema
 │   ├── MEMORY.md                # Memoria principal (carregada no system prompt)
 │   ├── agents-architecture.md   # Design detalhado do sistema de agentes
 │   └── autonomous-patterns.md   # Padroes de operacao autonoma
-├── config/                      # Backup das configuracoes (copia, nao symlink)
-│   ├── settings.json            # Settings globais (Agent Teams habilitado)
-│   ├── settings.local.json      # Permissoes locais
-│   └── claude.json              # Config raiz (~/.claude.json) com MCP servers
+├── LICENSE                      # MIT License
 ├── README.md                    # Este arquivo
 └── setup.sh                     # Script para recriar symlinks
 ```
@@ -88,11 +87,11 @@ claude-master/
 
 | Comando | Descricao |
 |---------|-----------|
-| `/workflows:greenfield` | Projeto do zero: conceito → arquitetura → stories → codigo |
-| `/workflows:brownfield` | Projeto existente: avaliar → planejar → implementar |
-| `/workflows:story-cycle` | Ciclo: SM cria story → Dev implementa → QA revisa → DevOps entrega |
-| `/workflows:qa-loop` | Loop de qualidade: review → fix → re-review ate PASS (max 5x) |
-| `/workflows:spec-pipeline` | Pipeline: requisitos → avaliacao → pesquisa → spec → critica → plano |
+| `/workflows:greenfield` | Projeto do zero: conceito -> arquitetura -> stories -> codigo |
+| `/workflows:brownfield` | Projeto existente: avaliar -> planejar -> implementar |
+| `/workflows:story-cycle` | Ciclo: SM cria story -> Dev implementa -> QA revisa -> DevOps entrega |
+| `/workflows:qa-loop` | Loop de qualidade: review -> fix -> re-review ate PASS (max 5x) |
+| `/workflows:spec-pipeline` | Pipeline: requisitos -> avaliacao -> pesquisa -> spec -> critica -> plano |
 | `/workflows:progress` | Salvar/carregar progresso entre sessoes |
 | `/workflows:auto` | Modo autonomo: executa stories com intervencao minima |
 | `/workflows:team-status` | Relatorio de status do projeto e agentes |
@@ -101,7 +100,7 @@ claude-master/
 
 | Comando | Descricao |
 |---------|-----------|
-| `/team:delegate` | Descreva a tarefa → roteamento automatico para o agente certo |
+| `/team:delegate` | Descreva a tarefa -> roteamento automatico para o agente certo |
 | `/team:plan` | Crie um plano de execucao multi-agente para tarefas complexas |
 
 ## Design System (Skills)
@@ -116,67 +115,57 @@ claude-master/
 
 ## Integracao com Agent Teams
 
-O sistema usa `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` para habilitar equipes nativas do Claude Code:
+O sistema suporta `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` para habilitar equipes nativas do Claude Code:
 
 - **Skills** dao a persona e expertise a cada agente
 - **Agent Teams** dao a infraestrutura de execucao paralela
 - Comunicacao via task list compartilhada + mailbox
 - Modos: `in-process` | `tmux` | `auto`
 
-## MCP Servers
-
-- **Figma (oficial)**: Remote MCP via OAuth para extrair design context
-- **Figma-Context-MCP (Framelink)**: Simplifica dados do Figma para geracao de codigo
-
-## Referencias Locais
-
-- **shadcn/ui v4**: `/Users/andreylopes/shadcn-ui/` (57 components, 28 blocks, 70+ charts)
-- **Tailwind CSS v4**: `/Users/andreylopes/tailwindcss/` (Oxide engine, Rust)
-
 ## Como Funciona
 
 Este diretorio e a **fonte de verdade** de todo o sistema. O Claude Code acessa os arquivos via symlinks:
 
 ```
-~/.claude/commands    → ~/claude-master/commands
-~/.claude/skills      → ~/claude-master/skills
-~/.claude/projects/-Users-andreylopes/memory → ~/claude-master/memory
+~/.claude/commands    -> ~/claude-master/commands
+~/.claude/skills      -> ~/claude-master/skills
+~/.claude/projects/<project>/memory -> ~/claude-master/memory
 ```
 
 Para recriar os symlinks (ex: apos mover a pasta), rode `./setup.sh`.
 
-## Bootstrap (1 comando)
+## Instalacao
 
-Para onboarding de cliente final (Core + PRO em um fluxo):
+Clone o repositorio e execute o setup:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/andreyloppes/aios-master/main/bootstrap.sh | \
-  bash -s -- --license-key "AIOSPRO...." --mode customer
+git clone https://github.com/andreyloppes/claude-master.git ~/claude-master
+cd ~/claude-master
+chmod +x setup.sh
+./setup.sh
 ```
 
-Instalar somente a versao gratuita (Core):
+Ou instale via bootstrap (1 comando):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/andreyloppes/aios-master/main/bootstrap.sh | \
+curl -fsSL https://raw.githubusercontent.com/andreyloppes/claude-master/main/bootstrap.sh | \
   bash -s -- --edition core
 ```
 
-## Open-Core + Pro MVP
+## PRO Module
 
-Para referencia de produto/licenciamento, existe um MVP executavel em:
+Quer ir alem? O **Claude Master PRO** adiciona ao Core:
 
-`open-core-pro-mvp/`
+- **5 comandos PRO**: status, metrics, squad, cost, report
+- **4 workflows avancados**: client-onboarding, sprint-retro, cost-report, deploy-pipeline
+- **3 skills especializadas**: cost-optimizer, analytics, client-report
+- **5 squads de industria**: healthcare, marketing-agency, saas-startup, ecommerce, freelancer
+- **5 conectores MCP**: Google Sheets, Notion, Slack/Discord, Stripe, Database
+- **Dashboard**: Next.js + shadcn/ui com metricas em tempo real
+- **Scripts de producao**: session-logger, cost-tracker, health-check, backup, cron e mais
 
-Ele demonstra:
+Para mais informacoes sobre o PRO, visite: [https://github.com/andreyloppes/claude-master-pro](https://github.com/andreyloppes/claude-master-pro)
 
-1. `core/` aberto sempre ativo.
-2. `pro/` habilitado por `PRO_LICENSE_KEY`.
-3. Feature flags com fallback seguro para core quando a licenca nao e valida.
+## Licenca
 
-Guia rapido:
-
-```bash
-cd open-core-pro-mvp
-node cli.js status
-node scripts/generate-demo-license.js advanced 2099-12-31 acme
-```
+[MIT](LICENSE) - Use, modifique, distribua livremente.
