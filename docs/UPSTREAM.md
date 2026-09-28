@@ -20,4 +20,4 @@ Para atualizar uma peça: `scripts/upstream.sh <repo>` clona o upstream no `/tmp
 | `scientific-skills` | https://github.com/K-Dense-AI/claude-scientific-skills.git | `c84622c` | 15 skills (dados, visualização, escrita) |
 | `second-brain-skills` | https://github.com/coleam00/second-brain-skills.git | `75e1e9c` | 5 skills (sop-creator, brand-voice-generator, pptx-generator, mcp-client, remotion) |
 | `superclaude` | https://github.com/SuperClaude-Org/SuperClaude_Framework.git | `b061b2f` | nada — referência |
-| `trailofbits-security` | https://github.com/trailofbits/skills.git | `c609769` | usado só pelo port Codex (`Cerebro central/import/claude-home/plugins`). No Claude Code, instalar como marketplace: `/plugin marketplace add trailofbits/skills` |
+| `trailofbits-security` | https://github.com/trailofbits/skills.git | `c609769` | não instalado (a cópia do port Codex saiu em 2026-09-28). Para usar como marketplace: `/plugin marketplace add trailofbits/skills` |
