@@ -1,0 +1,30 @@
+<div class="tt" id="tt" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  var tt=document.getElementById('tt');
+  function show(e,txt){tt.innerHTML=txt;tt.style.opacity='1';move(e);}
+  function move(e){
+    var x=e.clientX+14,y=e.clientY+16;
+    var r=tt.getBoundingClientRect();
+    if(x+r.width>window.innerWidth-10)x=e.clientX-r.width-14;
+    if(y+r.height>window.innerHeight-10)y=e.clientY-r.height-16;
+    tt.style.left=x+'px';tt.style.top=y+'px';
+  }
+  function hide(){tt.style.opacity='0';}
+  document.querySelectorAll('svg rect').forEach(function(el){
+    var t=el.querySelector('title');
+    if(!t)return;
+    var base=el.getAttribute('opacity')||'1';
+    var parts=t.textContent.split(' · ');
+    var html='<b>'+parts[0]+'</b>'+(parts.length>1?'<br>'+parts.slice(1).join('<br>'):'');
+    el.style.cursor='crosshair';
+    el.setAttribute('tabindex','0');
+    el.addEventListener('mouseenter',function(e){el.setAttribute('opacity',(parseFloat(base)*0.78).toFixed(3));show(e,html);});
+    el.addEventListener('mousemove',move);
+    el.addEventListener('mouseleave',function(){el.setAttribute('opacity',base);hide();});
+    el.addEventListener('focus',function(){el.setAttribute('opacity',(parseFloat(base)*0.78).toFixed(3));});
+    el.addEventListener('blur',function(){el.setAttribute('opacity',base);hide();});
+  });
+})();
+</script>
+</body></html>

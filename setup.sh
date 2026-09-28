@@ -80,6 +80,9 @@ create_symlink "$MASTER_DIR/commands" "$CLAUDE_DIR/commands" "commands  →  12 
 # Skills (interface-design)
 create_symlink "$MASTER_DIR/skills" "$CLAUDE_DIR/skills" "skills    →  interface-design skill"
 
+# Subagents (delegated via Agent tool)
+create_symlink "$MASTER_DIR/agents" "$CLAUDE_DIR/agents" "agents    →  specialist subagents"
+
 # Memory (MEMORY.md, architecture, patterns)
 create_symlink "$MASTER_DIR/memory" "$PROJECT_DIR/memory" "memory    →  persistent agent memory"
 
